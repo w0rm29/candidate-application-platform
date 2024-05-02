@@ -5,59 +5,66 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import ListSubheader from '@mui/material/ListSubheader';
 import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-    PaperProps: {
-        style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-        },
-    },
-};
-
-
-function getStyles(name, personName, theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
 export default function MultipleSelect({ dropdownName, items }) {
     const theme = useTheme();
-    const [personName, setPersonName] = React.useState([]);
+    const [selectedItems, setSelectedItems] = React.useState([]);
 
     const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setPersonName(
-            typeof value === 'string' ? value.split(',') : value,
-        );
+        const { target: { value } } = event;
+        setSelectedItems(typeof value === 'string' ? value.split(',') : value);
     };
 
     const handleDelete = (valueToRemove) => () => {
-        console.log("ENETERE");
-        setPersonName((prevNames) => prevNames.filter((name) => name !== valueToRemove));
+        setSelectedItems(prev => prev.filter(item => item !== valueToRemove));
+    };
+
+    const renderMenuItems = () => {
+        // Using menuItems array to push the ListSubheader component 
+        const menuItems = [];
+        items.forEach((item, idx) => {
+            if (item.category) {
+                menuItems.push(<ListSubheader key={`subheader-${idx}`}>{item.category}</ListSubheader>);
+                item.roles.forEach(role => {
+                    menuItems.push(
+                        <MenuItem
+                            key={role}
+                            value={role}
+                            style={getStyles(role, selectedItems, theme)}
+                        >
+                            {role}
+                        </MenuItem>
+                    );
+                });
+            } else if (typeof item === 'string') {
+                menuItems.push(
+                    <MenuItem
+                        key={item}
+                        value={item}
+                        style={getStyles(item, selectedItems, theme)}
+                    >
+                        {item}
+                    </MenuItem>
+                );
+            }
+        });
+        return menuItems;
     };
 
     return (
         <div>
             <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-name-label">{dropdownName}</InputLabel>
+                <InputLabel id={`label-${dropdownName}`}>{dropdownName}</InputLabel>
                 <Select
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
+                    labelId={`label-${dropdownName}`}
+                    id={`select-${dropdownName}`}
                     multiple
-                    value={personName}
+                    value={selectedItems}
                     onChange={handleChange}
-                    input={<OutlinedInput id="select-multiple-chip" label={dropdownName} />}
+                    input={<OutlinedInput label={dropdownName} />}
                     renderValue={(selected) => (
                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                             {selected.map((value) => (
@@ -72,19 +79,17 @@ export default function MultipleSelect({ dropdownName, items }) {
                             ))}
                         </div>
                     )}
-                    MenuProps={MenuProps}
                 >
-                    {items.filter(name => !personName.includes(name)).map((name) => (
-                        <MenuItem
-                            key={name}
-                            value={name}
-                            style={getStyles(name, personName, theme)}
-                        >
-                            {name}
-                        </MenuItem>
-                    ))}
+                    {renderMenuItems()}
                 </Select>
             </FormControl>
         </div>
     );
+}
+
+function getStyles(name, selectedItems, theme) {
+    return {
+        fontWeight:
+            selectedItems.includes(name) ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
+    };
 }
