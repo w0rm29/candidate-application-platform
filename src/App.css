@@ -9,5 +9,4 @@
 .chip:hover .MuiChip-deleteIcon,
 .chip:active .MuiChip-deleteIcon {
   color: #f50057;
-  /* Red color for demonstration, change as needed */
 }
