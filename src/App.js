@@ -2,20 +2,14 @@ import './App.css';
 import MultipleSelect from './components/Select';
 
 function App() {
+  const rolesItems = [
+    { category: 'Engineering', roles: ['Backend', 'Frontend', 'Fullstack', 'IOS'] },
+    { category: 'Design', roles: ['UI/UX', 'Graphic Design', 'Animation'] },
+    { category: 'Product', roles: ['Product Manager', 'Product Analyst'] }
+  ];
   return (
     <div className='head'>
-      <MultipleSelect dropdownName='Roles' items={[
-        'Backend',
-        'Frontend',
-        'FullStack',
-        'IOS',
-        'Flutter',
-        'React Native',
-        'Android',
-        'Tech Lead',
-        'Dev-Ops',
-
-      ]} />
+      <MultipleSelect dropdownName='Roles' items={rolesItems} />
       <MultipleSelect dropdownName='Number of Employees' items={[
         '1-10',
         '11-20',
@@ -25,6 +19,7 @@ function App() {
         '201-500',
         '500+'
       ]} />
+
       <MultipleSelect dropdownName='Experience' items={[
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
       ]} />
