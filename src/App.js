@@ -1,23 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import MultipleSelect from './components/Select';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='head'>
+      <MultipleSelect dropdownName='Roles' items={[
+        'Backend',
+        'Frontend',
+        'FullStack',
+        'IOS',
+        'Flutter',
+        'React Native',
+        'Android',
+        'Tech Lead',
+        'Dev-Ops',
+
+      ]} />
+      <MultipleSelect dropdownName='Number of Employees' items={[
+        '1-10',
+        '11-20',
+        '21-50',
+        '51-100',
+        '101-200',
+        '201-500',
+        '500+'
+      ]} />
+      <MultipleSelect dropdownName='Experience' items={[
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'
+      ]} />
+      <MultipleSelect dropdownName='Remote' items={['Remote', 'Hybrid', 'In-Office']} />
+      <MultipleSelect dropdownName='Minimum Base Salary' items={[]} />
+
     </div>
   );
 }
