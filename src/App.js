@@ -1,8 +1,10 @@
 import './App.css';
 import MultipleSelect from './components/Select';
 import { useState } from 'react';
-import Box from './components/CompanyName';
 import JobsComponent from './components/JobsComponent';
+import { store } from './store';
+import { Provider } from 'react-redux';
+import CompanyFilterComponent from './components/CompanyName';
 
 function App() {
   const rolesItems = [
@@ -43,15 +45,22 @@ function App() {
   ];
 
   const minBaseSalary = [
-    '0L', '10L', '20L', '30L', '40L', '50L', '60L', '70L'
+    '0 USD', '10 USD', '20 USD', '30 USD', '40 USD', '50 USD', '60 USD', '70 USD', '100+ USD'
   ];
 
   const techStackItems = [
-    'JavaScript', 'Python', 'Java', 'C#', 'Ruby', 'Elixir', 'Go', 'Rust', 'C++', 'Rust', 'Ruby/Rails'
+    'JavaScript', 'Python', 'Java', 'C#', 'Ruby', 'Elixir', 'Go', 'Rust', 'C++', 'Ruby/Rails'
   ];
 
   const [selectedRoles, setSelectedRoles] = useState([]);
+
   const [showTechStack, setShowTechStack] = useState(false);
+
+  const [selectedCompany, setCompantName] = useState('');
+
+  const [selectRemote, setRemote] = useState([]);
+
+
 
   const handleRoleChange = (selected) => {
     setSelectedRoles(selected);
@@ -59,26 +68,69 @@ function App() {
     setShowTechStack(selected.some(role => engineeringRoles.includes(role)));
   };
 
+
+  const handleCompanyName = (company) => {
+    setCompantName(company);
+  }
+
+  console.log("DASDASDAS", handleCompanyName)
+
+  const handleRemote = (remote) => {
+    setRemote(remote);
+  }
+
   return (
-    <><div className='container'>
-      <MultipleSelect
-        dropdownName='Roles'
-        items={rolesItems}
-        multiple={true}
-        onSelectionChange={handleRoleChange}
-      />
-      {showTechStack && <MultipleSelect dropdownName='Tech Stack' items={techStackItems} multiple={true} />}
+    <>
+      <div className='container'>
+        <MultipleSelect
+          dropdownName='Roles'
+          items={rolesItems}
+          multiple={true}
+          onSelectionChange={handleRoleChange}
+
+        />
+        {showTechStack &&
+          <MultipleSelect
+            dropdownName='Tech Stack'
+            items={techStackItems}
+            multiple={true}
+          />
+        }
 
 
-      <MultipleSelect dropdownName='Number of Employees' items={numOfEmp} />
+        <MultipleSelect
+          dropdownName='Number of Employees'
+          items={numOfEmp}
+        />
 
-      <MultipleSelect dropdownName='Experience' items={exp} multiple={false} />
-      <MultipleSelect dropdownName='Remote' items={remote} />
-      <MultipleSelect dropdownName='Min Base Salary' items={minBaseSalary} />
-      <Box />
-    </div>
+        <MultipleSelect
+          dropdownName='Experience'
+          items={exp}
+          multiple={false}
+        />
+
+        <MultipleSelect
+          dropdownName='Remote'
+          items={remote}
+          onSelectionChange={handleRemote}
+        />
+
+        <MultipleSelect
+          dropdownName='Min Base Salary'
+          items={minBaseSalary}
+        />
+
+        <CompanyFilterComponent
+          onSelectionChange={handleCompanyName}
+        />
+      </div>
+
       <div className='jobs-section'>
-        <JobsComponent />
+        <JobsComponent
+          selectedRoles={selectedRoles}
+          selectedCompany={selectedCompany}
+          selectRemote={selectRemote}
+        />
       </div>
     </>
   );

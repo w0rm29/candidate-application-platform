@@ -7,14 +7,13 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ListSubheader from '@mui/material/ListSubheader';
 import Chip from '@mui/material/Chip';
-import DeleteIcon from '@mui/icons-material/Delete';
-
-// TODO : handleDelete not working as expected, Chip component not working
-// TODO : handle for Experience select
+import ClearIcon from '@mui/icons-material/Clear';
 
 export default function MultipleSelect({ dropdownName, items, onSelectionChange, multiple = true }) {
     const theme = useTheme();
     const [selectedItems, setSelectedItems] = React.useState([]);
+
+    console.log("SELECTED ITEMS", selectedItems.map(item => item.toLowerCase()));
 
     const handleChange = (event) => {
         const { target: { value } } = event;
@@ -25,17 +24,26 @@ export default function MultipleSelect({ dropdownName, items, onSelectionChange,
     };
 
     const handleDelete = (valueToRemove) => () => {
-        setSelectedItems(prev => prev.filter(item => item !== valueToRemove));
+        const newSelectedItems = selectedItems.filter(item => item.toLowerCase() !== valueToRemove.toLowerCase());
+        setSelectedItems(newSelectedItems);
+        if (onSelectionChange) {
+            onSelectionChange(newSelectedItems);
+        }
+    };
+
+    const handleClearAll = () => {
+        setSelectedItems([]);
+        if (onSelectionChange) {
+            onSelectionChange([]);
+        }
     };
 
     const renderMenuItems = () => {
-        // Using menuItems array to push the ListSubheader component
         const menuItems = [];
         items.forEach((item, idx) => {
             if (item.category) {
                 menuItems.push(<ListSubheader key={`subheader-${idx}`}>{item.category}</ListSubheader>);
                 item.roles.forEach(role => {
-                    // remove item that is selected from the dropdown
                     if (!selectedItems.includes(role)) {
                         menuItems.push(
                             <MenuItem
@@ -48,78 +56,61 @@ export default function MultipleSelect({ dropdownName, items, onSelectionChange,
                         );
                     }
                 });
-            } else if (typeof item === 'string') {
-                if (!selectedItems.includes(item)) {
-                    menuItems.push(
-                        <MenuItem
-                            key={item}
-                            value={item}
-                            style={getStyles(item, selectedItems, theme)}
-                        >
-                            {item}
-                        </MenuItem>
-                    );
-                }
+            } else {
+                menuItems.push(
+                    <MenuItem
+                        key={item}
+                        value={item}
+                        style={getStyles(item, selectedItems, theme)}
+                    >
+                        {item}
+                    </MenuItem>
+                );
             }
         });
         return menuItems;
     };
 
-    const renderValue = (selected) => {
-        if (multiple) {
-            // Handle multiple selections - expected to be an array
-            return (
-                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                    {selected.map((value) => (
-                        <Chip
-                            key={value}
-                            label={value}
-                            onDelete={handleDelete(value)}
-                            deleteIcon={<DeleteIcon />}
-                            style={{ margin: 2 }}
-                            className='chip'
-                        />
-                    ))}
-                </div>
-            );
-        } else {
-            // Handle single selection - not an array
-            return (
-                selected ? <Chip
-                    label={selected}
-                    onDelete={handleDelete(selected)}
-                    deleteIcon={<DeleteIcon />}
+    const renderValue = (selected) => (
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {selected.map((value) => (
+                <Chip
+                    key={value}
+                    label={value}
+                    onDelete={handleDelete(value)}
+                    deleteIcon={<ClearIcon onClick={handleClearAll} />}
                     style={{ margin: 2 }}
-                    className='chip'
-                /> : null
-            );
-        }
-    };
-
+                />
+            ))}
+            {selected.length > 0 && (
+                <ClearIcon
+                    onClick={handleClearAll}
+                    style={{ marginLeft: 'auto', cursor: 'pointer', color: theme.palette.grey[500] }}
+                />
+            )}
+        </div>
+    );
 
     return (
-        <div>
-            <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id={`label-${dropdownName}`}>{dropdownName}</InputLabel>
-                <Select
-                    labelId={`label-${dropdownName}`}
-                    id={`select-${dropdownName}`}
-                    multiple={multiple}
-                    value={selectedItems}
-                    onChange={handleChange}
-                    input={<OutlinedInput label={dropdownName} />}
-                    renderValue={renderValue}
-                >
-                    {renderMenuItems()}
-                </Select>
-            </FormControl>
-        </div>
+        <FormControl sx={{ m: 1, width: 'auto', minWidth: 250, maxWidth: 400 }}>
+            <InputLabel id={`label-${dropdownName}`}>{dropdownName}</InputLabel>
+            <Select
+                labelId={`label-${dropdownName}`}
+                id={`select-${dropdownName}`}
+                multiple={multiple}
+                value={selectedItems}
+                onChange={handleChange}
+                input={<OutlinedInput label={dropdownName} />}
+                renderValue={renderValue}
+            >
+                {renderMenuItems()}
+            </Select>
+        </FormControl>
     );
 }
 
 function getStyles(name, selectedItems, theme) {
     return {
-        fontWeight:
-            selectedItems.includes(name) ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
+        fontWeight: selectedItems.includes(name) ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
     };
 }

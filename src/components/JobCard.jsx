@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, Box, Grid, Button, Chip, Avatar, AvatarGroup } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid, Button, Chip } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Link from '@mui/material/Link';
@@ -34,16 +34,16 @@ function JobCard({ job }) {
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {job.logoUrl && <Box component="img" src={job.logoUrl} alt={`${job.companyName} Logo`} sx={{ height: 40, width: 40, mr: 2 }} />}
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <Typography variant="h6">{job.companyName}</Typography>
+                                <Typography variant="subtitle2" color="text.secondary">{job.companyName}</Typography>
                                 <Typography variant="h6">{capitalizeFirstLetter(job.jobRole)}</Typography>
                                 <Typography variant="subtitle2" color="text.secondary">{capitalizeFirstLetter(job.location)}</Typography>
                             </Box>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, mb: 1 }}>
                             {job.minJdSalary &&
-                                <Typography variant="body2" sx={{ fontWeight: 'bold', mr: 1 }}>Estimated Salary: {job.minJdSalary} {job.salaryCurrencyCode}</Typography>}
+                                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold', mr: 1 }}>Estimated Salary: {job.minJdSalary} - {job.maxJdSalary} {job.salaryCurrencyCode}</Typography>}
                             {job.minJdSalary &&
-                                <Chip icon={<CheckCircleIcon />} color="success" variant="outlined" />}
+                                <Chip icon={<CheckCircleIcon />} color="success" variant="outlined" style={{ border: 'none', background: 'none', boxShadow: 'none' }} />}
                         </Box>
                         <Typography variant="body2" sx={{ mb: 1 }}>
                             <strong>About Company</strong>
@@ -60,11 +60,11 @@ function JobCard({ job }) {
                         }
                         {job.minExp &&
                             <div>
-                                <Typography variant="subtitle1" sx={{ fontWeight: 'medium', fontSize: 18, mt: 1 }}>
+                                <Typography variant="subtitle1" color="text.secondary" sx={{ fontWeight: 'medium', fontSize: 18, mt: 1 }}>
                                     Minimum Experience
                                 </Typography>
 
-                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
                                     {job.minExp} years
                                 </Typography>
 
@@ -86,25 +86,3 @@ function JobCard({ job }) {
 }
 
 export default JobCard;
-
-// const JobHeader = ({ job }) => (
-//     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-//         {job.logoUrl && <Box component="img" src={job.logoUrl} alt={`${job.companyName} Logo`} sx={{ height: 40, width: 40, mr: 2 }} />}
-//         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-//             <Typography variant="h6">{job.companyName}</Typography>
-//             <Typography variant="h6">{job.jobRole}</Typography>
-//             <Typography variant="subtitle2" color="text.secondary">{job.location}</Typography>
-//         </Box>
-//     </Box>
-// );
-
-// const JobFooter = ({ job }) => (
-//     <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', gap: 2, mt: 2 }}>
-//         <Button variant="contained" startIcon={<FlashOnIcon />} sx={{ backgroundColor: '#76ff03', color: '#000', '&:hover': { backgroundColor: '#64dd17' }, flexGrow: 1 }}>
-//             Easy Apply
-//         </Button>
-//         <Button variant="contained" sx={{ backgroundColor: '#536dfe', '&:hover': { backgroundColor: '#3d5afe' }, flexGrow: 1 }}>
-//             Unlock referral asks
-//         </Button>
-//     </Box>
-// );
