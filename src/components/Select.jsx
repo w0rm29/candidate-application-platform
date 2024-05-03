@@ -10,19 +10,21 @@ import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // TODO : handleDelete not working as expected, Chip component not working
+// TODO : handle for Experience select
 
-export default function MultipleSelect({ dropdownName, items }) {
+export default function MultipleSelect({ dropdownName, items, onSelectionChange, multiple = true }) {
     const theme = useTheme();
     const [selectedItems, setSelectedItems] = React.useState([]);
 
     const handleChange = (event) => {
         const { target: { value } } = event;
         setSelectedItems(typeof value === 'string' ? value.split(',') : value);
+        if (onSelectionChange) {
+            onSelectionChange(typeof value === 'string' ? value.split(',') : value);
+        }
     };
 
     const handleDelete = (valueToRemove) => () => {
-        console.log("Value to remove:", valueToRemove);
-        console.log("Current selected items before removal:", selectedItems);
         setSelectedItems(prev => prev.filter(item => item !== valueToRemove));
     };
 
@@ -63,6 +65,38 @@ export default function MultipleSelect({ dropdownName, items }) {
         return menuItems;
     };
 
+    const renderValue = (selected) => {
+        if (multiple) {
+            // Handle multiple selections - expected to be an array
+            return (
+                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                    {selected.map((value) => (
+                        <Chip
+                            key={value}
+                            label={value}
+                            onDelete={handleDelete(value)}
+                            deleteIcon={<DeleteIcon />}
+                            style={{ margin: 2 }}
+                            className='chip'
+                        />
+                    ))}
+                </div>
+            );
+        } else {
+            // Handle single selection - not an array
+            return (
+                selected ? <Chip
+                    label={selected}
+                    onDelete={handleDelete(selected)}
+                    deleteIcon={<DeleteIcon />}
+                    style={{ margin: 2 }}
+                    className='chip'
+                /> : null
+            );
+        }
+    };
+
+
     return (
         <div>
             <FormControl sx={{ m: 1, width: 300 }}>
@@ -70,24 +104,11 @@ export default function MultipleSelect({ dropdownName, items }) {
                 <Select
                     labelId={`label-${dropdownName}`}
                     id={`select-${dropdownName}`}
-                    multiple
+                    multiple={multiple}
                     value={selectedItems}
                     onChange={handleChange}
                     input={<OutlinedInput label={dropdownName} />}
-                    renderValue={(selected) => (
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                            {selected.map((value) => (
-                                <Chip
-                                    key={value}
-                                    label={value}
-                                    onDelete={handleDelete(value)}
-                                    deleteIcon={<DeleteIcon />}
-                                    style={{ margin: 2 }}
-                                    className='chip'
-                                />
-                            ))}
-                        </div>
-                    )}
+                    renderValue={renderValue}
                 >
                     {renderMenuItems()}
                 </Select>

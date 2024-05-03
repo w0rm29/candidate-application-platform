@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from "./JobCard";
+import Grid from '@mui/material/Grid';
 
 function JobsComponent() {
     const [jobs, setJobs] = useState([]); // Holds the jobs data
@@ -45,11 +46,13 @@ function JobsComponent() {
     }
 
     return (
-        <div>
-            {jobs.map(job => (
-                < JobCard key={job.jdUid} job={job} />
+        <Grid container spacing={4} justifyContent="center">
+            {jobs.map((job, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                    <JobCard job={job} />
+                </Grid>
             ))}
-        </div>
+        </Grid>
     );
 }
 
