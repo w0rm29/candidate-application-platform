@@ -3,9 +3,9 @@ import JobCard from "./JobCard";
 import Grid from '@mui/material/Grid';
 
 function JobsComponent() {
-    const [jobs, setJobs] = useState([]); // Holds the jobs data
-    const [isLoading, setIsLoading] = useState(true); // Tracks loading state
-    const [error, setError] = useState(null); // Tracks error state
+    const [jobs, setJobs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchJobs = async () => {
@@ -37,22 +37,23 @@ function JobsComponent() {
         fetchJobs();
     }, []);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    // if (isLoading) {
+    //     return <div>Loading...</div>;
+    // }
 
     if (error) {
         return <div>Error: {error.message}</div>;
     }
 
     return (
-        <Grid container spacing={4} justifyContent="center">
-            {jobs.map((job, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                    <JobCard job={job} />
-                </Grid>
-            ))}
-        </Grid>
+
+        jobs.map((job, index) => (
+
+            <JobCard job={job} />
+
+        ))
+
+
     );
 }
 
