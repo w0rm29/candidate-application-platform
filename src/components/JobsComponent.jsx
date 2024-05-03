@@ -26,7 +26,7 @@ function JobsComponent({ selectedRoles, selectedCompany, selectRemote }) {
         }
 
         return () => observer.disconnect();
-    }, [isLoading, hasMore]);  // Ensure dependencies are correctly listed
+    }, [isLoading, hasMore]);
 
 
     const fetchJobs = async () => {

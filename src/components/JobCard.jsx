@@ -9,7 +9,7 @@ function JobCard({ job }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpand = () => {
-        setIsExpanded(!isExpanded); // Toggle the expanded state
+        setIsExpanded(!isExpanded);
     };
 
     // Function to handle the text display based on expansion state
@@ -21,9 +21,9 @@ function JobCard({ job }) {
     }
 
     return (
-        <Card sx={{ borderRadius: 2, mb: 2, boxShadow: 3 }}>
+        <Card sx={{ borderRadius: 4, mb: 6, boxShadow: 3 }}>
             <CardContent>
-                <Grid container spacing={4} alignItems="center">
+                <Grid container spacing={10} alignItems="center">
                     <Grid item xs={12}>
                         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 1 }}>
                             <AccessTimeIcon sx={{ fontSize: 14, color: 'text.secondary', mr: 0.5 }} />
@@ -70,14 +70,38 @@ function JobCard({ job }) {
 
                             </div>
                         }
-                        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', gap: 2, mt: 2 }}>
-                            <Button variant="contained" startIcon={<FlashOnIcon />} sx={{ backgroundColor: '#76ff03', color: '#000', '&:hover': { backgroundColor: '#64dd17' }, flexGrow: 1 }}>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            width: '100%',
+                            gap: 2,
+                            mt: 2
+                        }}>
+                            <Button
+                                variant="contained"
+                                startIcon={<FlashOnIcon />}
+                                sx={{
+                                    backgroundColor: '#76ff03',
+                                    color: '#000',
+                                    '&:hover': { backgroundColor: '#64dd17' },
+                                    width: '100%'
+                                }}
+                            >
                                 Easy Apply
                             </Button>
-                            <Button variant="contained" sx={{ backgroundColor: '#536dfe', '&:hover': { backgroundColor: '#3d5afe' }, flexGrow: 1 }}>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#536dfe',
+                                    '&:hover': { backgroundColor: '#3d5afe' },
+                                    width: '100%'
+                                }}
+                            >
                                 Unlock referral asks
                             </Button>
                         </Box>
+
                     </Grid>
                 </Grid>
             </CardContent>
