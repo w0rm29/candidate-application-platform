@@ -27,3 +27,6 @@
 2) Redux
 3) Material UI
 4) CSS
+
+> Screenshot
+<img width="1708" alt="Screenshot 2024-05-03 at 8 24 01 PM" src="https://github.com/w0rm29/candidate-application-platform/assets/136382207/1afc4038-fd57-47a0-9206-65b818320c22">
