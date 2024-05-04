@@ -1,5 +1,27 @@
 # Candidate Application Profile
 
+> Steps to run the code
+- npm start
+- hosted on localhost:3000
+
+> Assumption
+- the api response did not had `number of employes`, `texh stack` and `days Posted ago` so could not apply filter to them
+- handled value for `days posted ago`, so that in furture it could be compatible with my code
+
+> Things Implemeted
+- Working website with infinite scrolling
+- worked well on different screens, used Grid Container of MUI
+
+> Things left and could not implement
+- handleDelete for items selected in Select Container
+- handleClearAll not working properly in Select Component
+ Note: have to reload the page to clear the filters or click on them to delete them
+
+ > Future Scope:
+ - integrate the app with database for more seamless experience
+ - introduce accordian when clicking in view job
+ - integrate with linkedin, monster and naukri profile
+
 > Tech Stack Used:
 1) React
 2) Redux
