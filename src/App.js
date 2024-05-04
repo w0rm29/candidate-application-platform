@@ -73,8 +73,6 @@ function App() {
     setCompantName(company);
   }
 
-  console.log("DASDASDAS", handleCompanyName)
-
   const handleRemote = (remote) => {
     setRemote(remote);
   }

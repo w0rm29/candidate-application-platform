@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -11,65 +11,57 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 export default function MultipleSelect({ dropdownName, items, onSelectionChange, multiple = true }) {
     const theme = useTheme();
-    const [selectedItems, setSelectedItems] = React.useState([]);
-
-    console.log("SELECTED ITEMS", selectedItems.map(item => item.toLowerCase()));
+    const [selectedItems, setSelectedItems] = useState([]);
 
     const handleChange = (event) => {
         const { target: { value } } = event;
         setSelectedItems(typeof value === 'string' ? value.split(',') : value);
-        if (onSelectionChange) {
-            onSelectionChange(typeof value === 'string' ? value.split(',') : value);
-        }
+        onSelectionChange?.(typeof value === 'string' ? value.split(',') : value);
     };
 
     const handleDelete = (valueToRemove) => () => {
-        const newSelectedItems = selectedItems.filter(item => item.toLowerCase() !== valueToRemove.toLowerCase());
+        const newSelectedItems = selectedItems.filter(item => item !== valueToRemove);
         setSelectedItems(newSelectedItems);
-        if (onSelectionChange) {
-            onSelectionChange(newSelectedItems);
-        }
+        onSelectionChange?.(newSelectedItems);
     };
 
     const handleClearAll = () => {
         setSelectedItems([]);
-        if (onSelectionChange) {
-            onSelectionChange([]);
-        }
+        onSelectionChange?.([]);
     };
 
+    // Took help from chatgpt to render menu items, previosuly i was using Render.fragment and it is not supported
+
     const renderMenuItems = () => {
-        const menuItems = [];
-        items.forEach((item, idx) => {
+        const menuItems = items.flatMap((item, idx) => {
             if (item.category) {
-                menuItems.push(<ListSubheader key={`subheader-${idx}`}>{item.category}</ListSubheader>);
-                item.roles.forEach(role => {
-                    if (!selectedItems.includes(role)) {
-                        menuItems.push(
-                            <MenuItem
-                                key={role}
-                                value={role}
-                                style={getStyles(role, selectedItems, theme)}
-                            >
-                                {role}
-                            </MenuItem>
-                        );
-                    }
-                });
+                return [
+                    <ListSubheader key={`subheader-${idx}`}>{item.category}</ListSubheader>,
+                    ...item.roles.map(role => (
+                        <MenuItem
+                            key={`${role}-${idx}`}
+                            value={role}
+                            style={getStyles(role, selectedItems, theme)}
+                        >
+                            {role}
+                        </MenuItem>
+                    ))
+                ];
             } else {
-                menuItems.push(
+                return [
                     <MenuItem
-                        key={item}
-                        value={item}
+                        key={`${item}-${idx}`}
                         style={getStyles(item, selectedItems, theme)}
                     >
                         {item}
                     </MenuItem>
-                );
+                ];
             }
         });
+
         return menuItems;
     };
+
 
     const renderValue = (selected) => (
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -78,16 +70,10 @@ export default function MultipleSelect({ dropdownName, items, onSelectionChange,
                     key={value}
                     label={value}
                     onDelete={handleDelete(value)}
-                    deleteIcon={<ClearIcon onClick={handleClearAll} />}
+                    deleteIcon={<ClearIcon />}
                     style={{ margin: 2 }}
                 />
             ))}
-            {selected.length > 0 && (
-                <ClearIcon
-                    onClick={handleClearAll}
-                    style={{ marginLeft: 'auto', cursor: 'pointer', color: theme.palette.grey[500] }}
-                />
-            )}
         </div>
     );
 
